@@ -3,8 +3,10 @@
 - Emails everyone with their recipient's name and wishlist
 
 ## Usage
-1. Populate the `families` list described below
-2. run `python santabot.py`
+1. Make a throwaway gmail account
+2. Put gmail username/password in creds.txt
+3. Populate the `families` list described below
+4. run `python santabot.py`
 
 ## Family Structure
 ```

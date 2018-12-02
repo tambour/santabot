@@ -2,7 +2,6 @@
 secret santa matchmaker!
 
 email: kaliszewskisanta@gmail.com
-       kaliszewskiclaus@gmail.com
 
 NOTICE: always matches Bret and Brennan
 '''
@@ -124,15 +123,15 @@ def main():
     [
         Family('Grandma', \
         [
-            Member('Ginger',    'danbwh@gmail.com', 'wishlist')
+            Member('Ginger', 'kaliszewskisanta@gmail.com', 'wishlist')
         ]),
         Family('Asadorians', \
         [
-            Member('Kevan',     'danbwh@gmail.com', 'wishlist'),
-            Member('Susie',     'danbwh@gmail.com', 'wishlist'),
-            Member('Nick',      'danbwh@gmail.com', 'wishlist'),
-            Member('Adam',      'danbwh@gmail.com', 'wishlist'),
-            Member('Bret',      'danbwh@gmail.com', \
+            Member('Kevan', 'kaliszewskisanta@gmail.com', 'wishlist'),
+            Member('Susie', 'kaliszewskisanta@gmail.com', 'wishlist'),
+            Member('Nick',  'kaliszewskisanta@gmail.com', 'wishlist'),
+            Member('Adam',  'kaliszewskisanta@gmail.com', 'wishlist'),
+            Member('Bret',  'kaliszewskisanta@gmail.com', \
                 'Athletic shoes\n' + \
                 'Vans\n' + \
                 'Calvin Klein No shows\n' + \
@@ -146,22 +145,22 @@ def main():
         ]),
         Family('Kaliszewskis', \
         [
-            Member('Don',       'danbwh@gmail.com', 'wishlist'),
-            Member('Amanda',    'danbwh@gmail.com', 'wishlist'),
-            Member('Oisin',     'danbwh@gmail.com', 'wishlist'),
-            Member('Brennan',   'danbwh@gmail.com', 'wishlist')
+            Member('Don',     'kaliszewskisanta@gmail.com', 'wishlist'),
+            Member('Amanda',  'kaliszewskisanta@gmail.com', 'wishlist'),
+            Member('Oisin',   'kaliszewskisanta@gmail.com', 'wishlist'),
+            Member('Brennan', 'kaliszewskisanta@gmail.com', 'wishlist')
         ]),
         Family('Whites', \
         [
-            Member('Monica',    'danbwh@gmail.com', 'wishlist'),
-            Member('Ashley',    'danbwh@gmail.com', 'wishlist'),
-            Member('Kara',      'danbwh@gmail.com', \
+            Member('Monica', 'kaliszewskisanta@gmail.com', 'wishlist'),
+            Member('Ashley', 'kaliszewskisanta@gmail.com', 'wishlist'),
+            Member('Kara',   'kaliszewskisanta@gmail.com', \
                 'I would love some cozy slippers (size 6 shoe), black leggings (XS), homage Ohio State sweatshirt (crew neck or hoodie, S), love your melon winter hat (any color), and sweaters (size XS or S, depending on where it\'s from)\n' + \
                 'If anyone gets me homage here is a $20 off coupon!\n\nTLKF1018-107FA2B0'
             ),
-            Member('Danny',     'danbwh@gmail.com', 'wishlist'),
-            Member('Chris',     'danbwh@gmail.com', 'wishlist'),
-            Member('Jay',       'danbwh@gmail.com', 'wishlist')
+            Member('Danny',  'kaliszewskisanta@gmail.com', 'wishlist'),
+            Member('Chris',  'kaliszewskisanta@gmail.com', 'wishlist'),
+            Member('Jay',    'kaliszewskisanta@gmail.com', 'wishlist')
         ]),
     ]
 
@@ -172,7 +171,7 @@ def main():
     families[2].members[3].chosen = True
 
 
-
+    # loop until everyone has been chosen
     while True:
 
         # find a giver
@@ -189,12 +188,6 @@ def main():
         # find a recipient
         member.choice = other_family.get_member()
 
-        # oisin armor
-        if member.name == 'Oisin' and member.choice.name == 'Danny':
-            # reroll
-            member.choice = None
-            continue
-
         # done if everyone has a match
         all_matched = True
         for family in families:
@@ -206,8 +199,9 @@ def main():
         if all_matched:
             break
 
+
     # done, print results
-    f = open('santa.txt', 'w')
+    f = open('santabot_lastrun.txt', 'w')
     for family in families:
         print('{}'.format(family.name))
         f.write('{}\n'.format(family.name))
@@ -217,20 +211,17 @@ def main():
     f.close()
 
 
-    # TODO: email everyone
-
-    
-
-    
-
+    # email everyone
     for family in families:
         for member in family.members:
 
             ServerConnect = False
             try:
-                sender = 'kaliszewskisanta@gmail.com'
+                s = open('creds.txt', 'r')
+                sender = s.readline()
+                pw = s.readline()
                 smtp_server = SMTP('smtp.gmail.com','465')
-                smtp_server.login('kaliszewskisanta@gmail.com', 'Touhou24')
+                smtp_server.login(sender, pw)
                 ServerConnect = True
             except:
                 traceback.print_exc()
@@ -253,12 +244,12 @@ def main():
                 except SMTPException as e:
                     print "Error: unable to send email", e
                 finally:
+                    s.close()
                     smtp_server.close()
-
 
 
 if __name__ == '__main__':
     try:
         main()
-    except Exception as ex:
-        print('ex: {}'.format(str(ex)))
+    except:
+        traceback.print_exc()
