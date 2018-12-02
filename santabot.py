@@ -233,9 +233,12 @@ def main():
                 msg['From'] = sender
                 msg['To'] = member.email
                 msg['Subject'] = 'Secret Santa'
-                message = 'Hi {}, you have {} for secret santa!\n\n'.format(member.name, member.choice.name) + \
-                          'The following is their wish list:\n' + \
-                          member.choice.wishlist
+                message = 'Hi {}, you have {} for Secret Santa!\n\n'.format(member.name, member.choice.name) + \
+                          'Here is their wish list:\n' + \
+                          member.choice.wishlist + '\n\n\n\n' + \
+                          'email me back if something went wrong!\n' + \
+                          'source code here: https://github.com/tambour/santabot\n\n' + \
+                          'Merry Christmas!\n'
                 msg.attach(MIMEText(message))
 
                 try:
