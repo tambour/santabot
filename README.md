@@ -13,9 +13,8 @@
 families = \
 [
     Family('Johnsons', \
-    [
-        #      Name:    Email:              Wishlist:
-        Member('Pappy', 'pappyj@gmail.com', 'whiskey'),
+    [           
+        Member(name='Pappy', email='pappyj@gmail.com'),
         ...
     ]),
     ...

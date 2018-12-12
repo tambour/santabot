@@ -10,111 +10,9 @@ import sys
 import random
 import time
 import traceback
-from smtplib import SMTP_SSL as SMTP #SSL connection
+from smtplib import SMTP_SSL as SMTP
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
-
-class Family:
-
-    def __init__(self, name, members):
-        self.name = name
-        self.members = members
-        self.all_chosen = False
-
-    def get_member(self):
-        '''
-        find unchosen member
-        '''
-        member = random.sample(self.members, 1)[0]
-        while member.chosen:
-            member = random.sample(self.members, 1)[0]
-
-        member.chosen = True
-        self.check_all_chosen()
-
-        return member
-
-    def check_all_chosen(self):
-        '''
-        determine whether all members chosen
-        '''
-        all_chosen = True
-        for member in self.members:
-            if not member.chosen:
-                all_chosen = False
-                break
-
-        if all_chosen:
-            self.all_chosen = True
-
-class Member:
-    def __init__(self, name, email, wishlist):
-        self.name = name
-        self.email = email
-        self.wishlist = wishlist
-        self.choice = None
-        self.chosen = False
-
-
-def get_random_family(families):
-    '''
-    select a random family with at least
-    one member who does not have a match
-    '''
-    found = False
-    while not found:
-
-        for i in range(random.randint(1, 256)):
-            family = random.sample(families, 1)[0]
-
-        for member in family.members:
-            if not member.choice:
-                found = True
-
-    return family
-
-def get_random_member(family):
-    '''
-    select a random member without a match
-    '''
-    found = False
-    while not found:
-
-        for i in range(random.randint(1, 256)):
-            member = random.sample(family.members, 1)[0]
-
-        if not member.choice:
-            found = True
-
-    return member
-
-def get_other_family(families, family):
-    '''
-    get other family with at least
-    one member who has not been chosen
-
-    possible to run out of options,
-    so there's a one second timeout
-    '''
-
-    start_time = time.time()
-
-    found = False
-    while not found:
-
-        for i in range(random.randint(1, 256)):
-            other_family = random.sample(families, 1)[0]
-
-        if other_family.name != family.name:
-            for member in other_family.members:
-                if not member.chosen:
-                    found = True
-
-        if time.time() > start_time + 1:
-            return None
-
-    return other_family
-
 
 def main():
 
@@ -123,44 +21,31 @@ def main():
     [
         Family('Grandma', \
         [
-            Member('Ginger', 'kaliszewskisanta@gmail.com', 'wishlist')
+            Member('Ginger', '*******@**.**.com')
         ]),
         Family('Asadorians', \
         [
-            Member('Kevan', 'kaliszewskisanta@gmail.com', 'wishlist'),
-            Member('Susie', 'kaliszewskisanta@gmail.com', 'wishlist'),
-            Member('Nick',  'kaliszewskisanta@gmail.com', 'wishlist'),
-            Member('Adam',  'kaliszewskisanta@gmail.com', 'wishlist'),
-            Member('Bret',  'kaliszewskisanta@gmail.com', \
-                'Athletic shoes\n' + \
-                'Vans\n' + \
-                'Calvin Klein No shows\n' + \
-                'Calvin Klein Boxers\n' + \
-                'Retro basketball Jersey\n' + \
-                'Chipotle gift card\n' + \
-                'Sweatpants that get skinny toward ankle\n' + \
-                'Express colored pants\n' + \
-                'Long Nike socks black and white'
-            )
+            Member('Kevan', '*****.*********@*****.com'),
+            Member('Susie', '**************@*****.com'),
+            Member('Nick',  '*********.****@*****.com'),
+            Member('Adam',  '****.*********@*****.com'),
+            Member('Bret',  '*************@*****.com')
         ]),
         Family('Kaliszewskis', \
         [
-            Member('Don',     'kaliszewskisanta@gmail.com', 'wishlist'),
-            Member('Amanda',  'kaliszewskisanta@gmail.com', 'wishlist'),
-            Member('Oisin',   'kaliszewskisanta@gmail.com', 'wishlist'),
-            Member('Brennan', 'kaliszewskisanta@gmail.com', 'wishlist')
+            Member('Don',     '************@***.com'),
+            Member('Amanda',  '**************@**.com'),
+            Member('Oisin',   '****************@*****.com'),
+            Member('Brennan', '******************@*****.com')
         ]),
         Family('Whites', \
         [
-            Member('Monica', 'kaliszewskisanta@gmail.com', 'wishlist'),
-            Member('Ashley', 'kaliszewskisanta@gmail.com', 'wishlist'),
-            Member('Kara',   'kaliszewskisanta@gmail.com', \
-                'I would love some cozy slippers (size 6 shoe), black leggings (XS), homage Ohio State sweatshirt (crew neck or hoodie, S), love your melon winter hat (any color), and sweaters (size XS or S, depending on where it\'s from)\n' + \
-                'If anyone gets me homage here is a $20 off coupon!\n\nTLKF1018-107FA2B0'
-            ),
-            Member('Danny',  'kaliszewskisanta@gmail.com', 'wishlist'),
-            Member('Chris',  'kaliszewskisanta@gmail.com', 'wishlist'),
-            Member('Jay',    'kaliszewskisanta@gmail.com', 'wishlist')
+            Member('Monica', '**********@*****.com'),
+            Member('Ashley', '*****.********@*****.com'),
+            Member('Kara',   '*************@*****.com'),
+            Member('Danny',  '******@*****.com'),
+            Member('Chris',  '***************@*****.com'),
+            Member('Jay',    '***********@*******.com')
         ]),
     ]
 
@@ -200,13 +85,13 @@ def main():
             break
 
 
-    # done, print results
+    # done, print results / write to file
     f = open('santabot_lastrun.txt', 'w')
     for family in families:
-        print('{}'.format(family.name))
+        #print('{}'.format(family.name))
         f.write('{}\n'.format(family.name))
         for member in family.members:
-            print('    {}\t->\t{}'.format(member.name.ljust(7), member.choice.name))
+            #print('    {}\t->\t{}'.format(member.name.ljust(7), member.choice.name))
             f.write('    {}\t->\t{}\n'.format(member.name.ljust(7), member.choice.name))
     f.close()
 
@@ -215,40 +100,149 @@ def main():
     for family in families:
         for member in family.members:
 
-            ServerConnect = False
+            # connect to smtp server
+            connected = False
             try:
+                # please don't use your real gmail
                 s = open('creds.txt', 'r')
                 sender = s.readline()
                 pw = s.readline()
                 smtp_server = SMTP('smtp.gmail.com','465')
                 smtp_server.login(sender, pw)
-                ServerConnect = True
+                connected = True
             except:
                 traceback.print_exc()
                 sys.exit(0)
 
-            if ServerConnect == True:
-
-                msg = MIMEMultipart()
+            # construct the message
+            if connected:
+                message = \
+                        'Hi {}, you have {} for Secret Santa!\n\n'.format(member.name, member.choice.name) + \
+                        'Here is {}\'s wish list:\n'.format(member.choice.name) + \
+                        '"'+member.choice.wishlist+'"' + '\n\n' + \
+                        '(Sorry for the late start! We can get everyone\'s wishlists at Thanksgiving next year.\n' + \
+                        'If you have any questions for {}, reply to this email and I\'ll relay them anonymously.\n'.format(member.choice.name) + \
+                        'Source code here: https://github.com/tambour/santabot)\n\n' + \
+                        'Merry Christmas!\n'
+                msg = MIMEText(message)
+                msg['Subject'] = 'Secret Santa for {}'.format(member.name)
                 msg['From'] = sender
                 msg['To'] = member.email
-                msg['Subject'] = 'Secret Santa'
-                message = 'Hi {}, you have {} for Secret Santa!\n\n'.format(member.name, member.choice.name) + \
-                          'Here is their wish list:\n' + \
-                          member.choice.wishlist + '\n\n\n\n' + \
-                          'email me back if something went wrong!\n' + \
-                          'source code here: https://github.com/tambour/santabot\n\n' + \
-                          'Merry Christmas!\n'
-                msg.attach(MIMEText(message))
 
                 try:
-                    smtp_server.sendmail(sender, [member.email], msg.as_string())
-                    print "Successfully sent email"
+                    # send the message (switch commented line for test/prod)
+                    smtp_server.sendmail(sender, [sender], msg.as_string()) # TEST
+                    #smtp_server.sendmail(sender, [member.email], msg.as_string()) # ACTUAL
+                    print('sent email to {}, ({})'.format(member.name, member.email))
                 except SMTPException as e:
-                    print "Error: unable to send email", e
+                    print('error sending to {}:'.format(member.name))
+                    traceback.print_exc()
                 finally:
                     s.close()
                     smtp_server.close()
+
+
+class Family:
+
+    def __init__(self, name, members):
+        self.name = name
+        self.members = members
+        self.all_chosen = False
+
+    def get_member(self):
+        '''
+        find unchosen family member
+        '''
+        member = random.sample(self.members, 1)[0]
+        while member.chosen:
+            member = random.sample(self.members, 1)[0]
+
+        member.chosen = True
+        self.check_all_chosen()
+
+        return member
+
+    def check_all_chosen(self):
+        '''
+        determine whether all family members chosen
+        '''
+        all_chosen = True
+        for member in self.members:
+            if not member.chosen:
+                all_chosen = False
+                break
+
+        if all_chosen:
+            self.all_chosen = True
+
+
+class Member:
+    def __init__(self, name, email, wishlist=''):
+        self.name = name
+        self.email = email
+        self.wishlist = wishlist
+        self.choice = None
+        self.chosen = False
+
+
+def get_random_family(families):
+    '''
+    select a random family with at least
+    one member who does not have a match
+    '''
+    found = False
+    while not found:
+
+        for i in range(random.randint(1, 256)):
+            family = random.sample(families, 1)[0]
+
+        for member in family.members:
+            if not member.choice:
+                found = True
+
+    return family
+
+def get_random_member(family):
+    '''
+    select a random family member without a match
+    '''
+    found = False
+    while not found:
+
+        for i in range(random.randint(1, 256)):
+            member = random.sample(family.members, 1)[0]
+
+        if not member.choice:
+            found = True
+
+    return member
+
+def get_other_family(families, family):
+    '''
+    get other family with at least
+    one member who has not been chosen
+
+    possible to run out of options,
+    so there's a one second timeout
+    '''
+
+    start_time = time.time()
+
+    found = False
+    while not found:
+
+        for i in range(random.randint(1, 256)):
+            other_family = random.sample(families, 1)[0]
+
+        if other_family.name != family.name:
+            for member in other_family.members:
+                if not member.chosen:
+                    found = True
+
+        if time.time() > start_time + 1:
+            return None
+
+    return other_family
 
 
 if __name__ == '__main__':
